@@ -15,12 +15,12 @@ compile_file() {
     local obj="${src//\//_}.o"
     echo "Compiling $src..."
     clang -arch arm64 -isysroot "$SDK" -miphoneos-version-min=15.0 -fobjc-arc -Wno-everything \
-      -I. -I./kexploit -I./kpf -I./utils -I./compat -I./XPF/src -I./XPF/external/ChOma/include \
+      -I. -I./kexploit -I./kpf -I./utils -I./compat -I./XPF/src -I./XPF/external/ChOma/include -I./XPF/external/ChOma/src \
       -c "$src" -o "$obj"
     OBJS+=("$obj")
 }
 
-# Compile explicit source list
+# Compile main source list
 SOURCES=(
     "main.m"
     "AppDelegate.m"
@@ -44,6 +44,19 @@ SOURCES=(
 for f in "${SOURCES[@]}"; do
     compile_file "$f"
 done
+
+# Compile XPF engine and ChOma files if present
+if [ -d "XPF/src" ]; then
+    for f in XPF/src/*.c; do
+        [ -f "$f" ] && compile_file "$f"
+    done
+fi
+
+if [ -d "XPF/external/ChOma/src" ]; then
+    for f in XPF/external/ChOma/src/*.c; do
+        [ -f "$f" ] && compile_file "$f"
+    done
+fi
 
 echo "=== Linking Binary ==="
 clang -arch arm64 -isysroot "$SDK" -miphoneos-version-min=15.0 \
