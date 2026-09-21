@@ -8,54 +8,28 @@ OBJS=()
 
 compile_file() {
     local src="$1"
-    if [ ! -f "$src" ]; then
-        echo "Skip missing: $src"
-        return
-    fi
     local obj="${src//\//_}.o"
     echo "Compiling $src..."
-    clang -arch arm64 -isysroot "$SDK" -miphoneos-version-min=15.0 -fobjc-arc -Wno-everything \
-      -I. -I./kexploit -I./kpf -I./utils -I./compat -I./XPF/src -I./XPF/external/ChOma/include -I./XPF/external/ChOma/src \
-      -c "$src" -o "$obj"
+    clang -arch arm64 -isysroot "$SDK" -miphoneos-version-min=15.0 -fobjc-arc -Wno-everything -I. -I./kexploit -I./compat -c "$src" -o "$obj"
     OBJS+=("$obj")
 }
 
-# Compile main source list
-SOURCES=(
-    "main.m"
-    "AppDelegate.m"
-    "ZEXInjectorVC.m"
-    "ZEXFileService.m"
-    "MCMBridge.m"
-    "MCMFilzaIntegration.m"
-    "sandbox_escape.m"
-    "apfs_own.m"
-    "kexploit/kexploit_opa334.m"
-    "kexploit/krw.m"
-    "kexploit/kutils.m"
-    "kexploit/offsets.m"
-    "kexploit/vnode.m"
-    "kpf/patchfinder.m"
-    "utils/file.c"
-    "utils/hexdump.c"
-    "utils/process.c"
-)
+# Compile exact project files
+compile_file "main.m"
+compile_file "AppDelegate.m"
+compile_file "ZEXInjectorVC.m"
+compile_file "ZEXFileService.m"
+compile_file "MCMBridge.m"
+compile_file "MCMFilzaIntegration.m"
+compile_file "sandbox_escape.m"
+compile_file "apfs_own.m"
 
-for f in "${SOURCES[@]}"; do
-    compile_file "$f"
-done
-
-# Compile XPF engine and ChOma files if present
-if [ -d "XPF/src" ]; then
-    for f in XPF/src/*.c; do
-        [ -f "$f" ] && compile_file "$f"
-    done
-fi
-
-if [ -d "XPF/external/ChOma/src" ]; then
-    for f in XPF/external/ChOma/src/*.c; do
-        [ -f "$f" ] && compile_file "$f"
-    done
+if [ -d "kexploit" ]; then
+    compile_file "kexploit/kexploit_opa334.m"
+    compile_file "kexploit/krw.m"
+    compile_file "kexploit/kutils.m"
+    compile_file "kexploit/offsets.m"
+    compile_file "kexploit/vnode.m"
 fi
 
 echo "=== Linking Binary ==="
