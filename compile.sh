@@ -14,7 +14,9 @@ compile_file() {
     fi
     local obj="${src//\//_}.o"
     echo "Compiling $src..."
-    clang -arch arm64 -isysroot "$SDK" -miphoneos-version-min=15.0 -fobjc-arc -Wno-everything -I. -I./kexploit -I./compat -I./XPF/src -I./XPF/external/ChOma/include -c "$src" -o "$obj"
+    clang -arch arm64 -isysroot "$SDK" -miphoneos-version-min=15.0 -fobjc-arc -Wno-everything \
+      -I. -I./kexploit -I./kpf -I./utils -I./compat -I./XPF/src -I./XPF/external/ChOma/include \
+      -c "$src" -o "$obj"
     OBJS+=("$obj")
 }
 
