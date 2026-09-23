@@ -1,7 +1,10 @@
 #!/bin/bash
 set -e
 
-SDK=$(xcrun --sdk iphoneos --show-sdk-path)
+SDK=$(xcrun --sdk iphoneos --show-sdk-path 2>/dev/null || true)
+if [ -z "$SDK" ]; then
+    SDK=$(find /Applications/Xcode*.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs -name "iPhoneOS*.sdk" 2>/dev/null | head -n 1)
+fi
 echo "=== iOS SDK Path: $SDK ==="
 
 OBJS=()
