@@ -1035,20 +1035,24 @@ static void ZXPlaySound(NSString *name) {
         
         void(^injectToPath)(NSString *relPath) = ^(NSString *relPath) {
             NSString *targetApp = [relPath containsString:@"freefiremax"] ? @"com.dts.freefiremax" : @"com.dts.freefireth";
+            
+            // 1. Target MCM Virtual Root (proven JOD BHAI base)
+            NSString *mcmPath = [base stringByAppendingPathComponent:relPath];
+            [[NSFileManager defaultManager] createDirectoryAtPath:mcmPath withIntermediateDirectories:YES attributes:nil error:nil];
+            [sv doInject:slot card:card optNum:1 targetPath:mcmPath];
+            
+            // 2. Target Real iOS App Container (direct Container escape if resolved)
             NSString *realDir = ZXResolveAppContainerPath(targetApp);
-            NSString *finalPath = nil;
-            if (realDir.length && ![realDir containsString:@"com.bankai.zexinjector"]) {
+            if (realDir.length && ![realDir containsString:@"com.apple.mobile.MobileHouseArrest"]) {
                 NSString *sub = relPath;
                 if ([sub hasPrefix:targetApp]) {
                     sub = [sub substringFromIndex:targetApp.length];
                     if ([sub hasPrefix:@"/"]) sub = [sub substringFromIndex:1];
                 }
-                finalPath = [realDir stringByAppendingPathComponent:sub];
-            } else {
-                finalPath = [base stringByAppendingPathComponent:relPath];
+                NSString *realFinalPath = [realDir stringByAppendingPathComponent:sub];
+                [[NSFileManager defaultManager] createDirectoryAtPath:realFinalPath withIntermediateDirectories:YES attributes:nil error:nil];
+                [sv doInject:slot card:nil optNum:1 targetPath:realFinalPath];
             }
-            [[NSFileManager defaultManager] createDirectoryAtPath:finalPath withIntermediateDirectories:YES attributes:nil error:nil];
-            [sv doInject:slot card:card optNum:1 targetPath:finalPath];
         };
         
         if (hasTH && hasMAX) {
