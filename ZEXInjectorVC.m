@@ -51,7 +51,7 @@ static NSString *ZXResolveAppContainerPath(NSString *bundleId) {
 }
 
 static NSString* ZXGetHWID(void) {
-    NSString *k = @"com.bankai.injector.hwid";
+    NSString *k = @"com.zex.injector.hwid";
     NSString *saved = [[NSUserDefaults standardUserDefaults] stringForKey:k];
     if (saved.length) return saved;
     NSString *vendor = [UIDevice currentDevice].identifierForVendor.UUIDString;

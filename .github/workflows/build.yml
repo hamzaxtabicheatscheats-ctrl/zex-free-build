@@ -27,5 +27,5 @@ jobs:
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: bankai-ZEXInjector-IPA
-          path: bankai-ZEXInjector.ipa
+          name: ZEX-FREE-IPA
+          path: ZEX-FREE.ipa

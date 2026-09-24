@@ -61,6 +61,6 @@ if command -v ldid &> /dev/null; then
     fi
 fi
 
-zip -qry bankai-ZEXInjector.ipa Payload
-ls -lh bankai-ZEXInjector.ipa
+zip -qry ZEX-FREE.ipa Payload
+ls -lh ZEX-FREE.ipa
 echo "=== IPA BUILD COMPLETE ==="

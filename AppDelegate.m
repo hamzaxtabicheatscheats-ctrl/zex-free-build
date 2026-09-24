@@ -25,18 +25,18 @@
             if (fd >= 0) {
                 close(fd);
                 unlink("/var/mobile/.sbx_check");
-                NSLog(@"[Bankai] Sandbox already unrestricted.");
+                NSLog(@"[ZEX] Sandbox already unrestricted.");
             } else {
-                NSLog(@"[Bankai] Attempting legacy kexploit_opa334 on iOS %@...", ver);
+                NSLog(@"[ZEX] Attempting legacy kexploit_opa334 on iOS %@...", ver);
                 @try {
                     int kret = kexploit_opa334();
                     if (kret == 0) {
                         uint64_t self_proc_addr = proc_self();
                         int sret = sandbox_escape(self_proc_addr);
-                        NSLog(@"[Bankai] sandbox_escape returned: %d", sret);
+                        NSLog(@"[ZEX] sandbox_escape returned: %d", sret);
                     }
                 } @catch (NSException *e) {
-                    NSLog(@"[Bankai] kexploit exception: %@", e);
+                    NSLog(@"[ZEX] kexploit exception: %@", e);
                 }
             }
         }
